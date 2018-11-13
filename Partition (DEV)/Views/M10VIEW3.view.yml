@@ -1,0 +1,22 @@
+﻿Web View:
+  Name:               M10View3
+  Enabled For RDMLX:  Yes
+
+  Multilingual Details:
+  - ENG:
+      Description:        "View3"
+
+  - FRA:
+      Description:        "View3"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_VIEW) Displayposition(1) Tabposition(1) Layoutmanager(#Layout1) Caption('View3')
+    
+    Define_Com Class(#PRIM_TBLO) Name(#Layout1)
+    Define_Com Class(#PRIM_TBLO.Row) Name(#Layout1Row1) Displayposition(1) Parent(#Layout1)
+    Define_Com Class(#PRIM_TBLO.Column) Name(#Layout1Column1) Displayposition(1) Parent(#Layout1)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#Layout1Item1) Column(#Layout1Column1) Manage(#Label) Parent(#Layout1) Row(#Layout1Row1) Sizing(ContentWidthAndHeight)
+    
+    Define_Com Class(#PRIM_MD.Label) Name(#Label) Caption('View3') Displayposition(1) Height(51) Iconheight(0) Left(108) Parent(#COM_OWNER) Tabposition(1) Top(200) Width(84) Captionalignment(Center) Themedrawstyle('Heading1') Paddingbottom(10) Paddingleft(10) Paddingright(10) Paddingtop(10)
+    
+    End_Com

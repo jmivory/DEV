@@ -1,0 +1,38 @@
+﻿ServerModule:
+  Name:               M10Session
+  Target Platform:    Windows/IBM i/Linux
+
+  Multilingual Details:
+  - ENG:
+      Description:        "Application Session"
+
+  - FRA:
+      Description:        "Application Session"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_SRVM) Sessionidentifier('M10SESSION')
+    
+    Define Field(#M10UserName) Type(*STRING)
+    Define Field(#M10Password) Type(*STRING)
+    Define Field(#M10ReturnCode) Type(*CHAR) Length(2)
+    
+    Srvroutine Name(SignIn)
+    Field_Map For(*INPUT) Field(#M10UserName) Parameter_Name(UserName)
+    Field_Map For(*INPUT) Field(#M10Password) Parameter_Name(Password)
+    Field_Map For(*OUTPUT) Field(#M10ReturnCode) Parameter_Name(ReturnCode)
+    
+    * TODO: Check username and password
+    
+    #COM_OWNER.StartSession Timeout(3600)
+    
+    #M10ReturnCode := OK
+    
+    Endroutine
+    
+    Srvroutine Name(SignOut) Session(*REQUIRED)
+    
+    #COM_OWNER.EndSession
+    
+    Endroutine
+    
+    End_Com
