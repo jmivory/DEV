@@ -1,0 +1,38 @@
+﻿ServerModule:
+  Name:               MY9Session
+  Target Platform:    Windows/IBM i/Linux
+
+  Multilingual Details:
+  - ENG:
+      Description:        "Application Session"
+
+  - FRA:
+      Description:        "Application Session"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_SRVM) Sessionidentifier('MY9SESSION')
+    
+    Define Field(#MY9UserName) Type(*STRING)
+    Define Field(#MY9Password) Type(*STRING)
+    Define Field(#MY9ReturnCode) Type(*CHAR) Length(2)
+    
+    Srvroutine Name(SignIn)
+    Field_Map For(*INPUT) Field(#MY9UserName) Parameter_Name(UserName)
+    Field_Map For(*INPUT) Field(#MY9Password) Parameter_Name(Password)
+    Field_Map For(*OUTPUT) Field(#MY9ReturnCode) Parameter_Name(ReturnCode)
+    
+    * TODO: Check username and password
+    
+    #COM_OWNER.StartSession Timeout(3600)
+    
+    #MY9ReturnCode := OK
+    
+    Endroutine
+    
+    Srvroutine Name(SignOut) Session(*REQUIRED)
+    
+    #COM_OWNER.EndSession
+    
+    Endroutine
+    
+    End_Com
