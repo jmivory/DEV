@@ -1,0 +1,38 @@
+﻿ServerModule:
+  Name:               MY8Session
+  Target Platform:    Windows/IBM i/Linux
+
+  Multilingual Details:
+  - ENG:
+      Description:        "Application Session"
+
+  - FRA:
+      Description:        "Application Session"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_SRVM) Sessionidentifier('MY8SESSION')
+    
+    Define Field(#MY8UserName) Type(*STRING)
+    Define Field(#MY8Password) Type(*STRING)
+    Define Field(#MY8ReturnCode) Type(*CHAR) Length(2)
+    
+    Srvroutine Name(SignIn)
+    Field_Map For(*INPUT) Field(#MY8UserName) Parameter_Name(UserName)
+    Field_Map For(*INPUT) Field(#MY8Password) Parameter_Name(Password)
+    Field_Map For(*OUTPUT) Field(#MY8ReturnCode) Parameter_Name(ReturnCode)
+    
+    * TODO: Check username and password
+    
+    #COM_OWNER.StartSession Timeout(3600)
+    
+    #MY8ReturnCode := OK
+    
+    Endroutine
+    
+    Srvroutine Name(SignOut) Session(*REQUIRED)
+    
+    #COM_OWNER.EndSession
+    
+    Endroutine
+    
+    End_Com

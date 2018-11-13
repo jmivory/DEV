@@ -1,0 +1,76 @@
+﻿ServerModule:
+  Name:               MY8ContactsServer
+  Target Platform:    Windows/IBM i/Linux
+
+  Multilingual Details:
+  - ENG:
+      Description:        "Contacts Server"
+
+  - FRA:
+      Description:        "Contacts Server"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_SRVM) Sessionidentifier('MY8SESSION')
+    
+    Def_List Name(#List) Fields(#xContactIdentification #xContactEmailAddress #xContactFullName #xContactFullAddress) Type(*WORKING) Entrys(*MAX)
+    
+    Group_By Name(#Fields) Fields(#xContactIdentification #xContactTitle #xContactLastName #xContactFirstName #xContactGender #xContactEmailAddress #xContactMobilePhone #xContactHomePhone #xContactFaxNumber #xContactBusinessPhone #xContactNotes #xContactPhoto #xContactInterests #xContactBirthdate #xContactHometown #xContactCity #xContactJobTitle #xContactCompany #xContactAddress #xContactCompanySite #xContactFullName #xContactFullAddress)
+    
+    Srvroutine Name(Find) Session(*REQUIRED)
+    Field_Map For(*INPUT) Field(#STD_STRNG) Parameter_Name(Filter)
+    List_Map For(*OUTPUT) List(#List)
+    
+    #STD_STRNG := #STD_STRNG.UpperCase.Trim
+    
+    Select Fields(#List) From_File(xContacts) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    If ((#STD_STRNG = *BLANKS) *OrIf (#xContactEmailAddress.UpperCase.Contains( #STD_STRNG )) *OrIf (#xContactFullName.UpperCase.Contains( #STD_STRNG )) *OrIf (#xContactFullAddress.UpperCase.Contains( #STD_STRNG )))
+    
+    Add_Entry To_List(#List)
+    
+    Endif
+    
+    Endselect
+    
+    Endroutine
+    
+    Srvroutine Name(Read) Session(*REQUIRED)
+    Field_Map For(*INPUT) Field(#xContactIdentification)
+    Group_Map For(*OUTPUT) Group(#Fields)
+    
+    Fetch Fields(#Fields) From_File(xContacts) With_Key(#xContactIdentification) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    Endroutine
+    
+    Srvroutine Name(Save) Session(*REQUIRED)
+    Group_Map For(*INPUT) Group(#Fields)
+    Field_Map For(*OUTPUT) Field(#STD_CODE) Parameter_Name(ReturnCode)
+    
+    Update Fields(#Fields) In_File(xContacts) With_Key(#xContactIdentification) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    If_Status Is(*NORECORD)
+    
+    Insert Fields(#Fields) To_File(xContacts) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    Endif
+    
+    If_Status Is(*OKAY)
+    
+    #STD_CODE := "OK"
+    
+    Else
+    
+    #STD_CODE := "ER"
+    
+    Endif
+    
+    Endroutine
+    
+    Srvroutine Name(Delete) Session(*REQUIRED)
+    Field_Map For(*INPUT) Field(#xContactIdentification)
+    
+    Delete From_File(xContacts) With_Key(#xContactIdentification) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    Endroutine
+    
+    End_Com
