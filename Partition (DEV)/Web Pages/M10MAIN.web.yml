@@ -1,0 +1,170 @@
+﻿Web Page:
+  Name:               M10Main
+  Enabled For RDMLX:  Yes
+
+  Multilingual Details:
+  - ENG:
+      Description:        "My App 10"
+
+  - FRA:
+      Description:        "My App 10"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_WEB) Theme(#SYS_THEME<MaterialDesignPurple>) Layoutmanager(#LayoutMain)
+    
+    * Layout - Main
+    Define_Com Class(#PRIM_TBLO) Name(#LayoutMain)
+    Define_Com Class(#PRIM_TBLO.Column) Name(#LayoutMainColumn1) Displayposition(1) Parent(#LayoutMain) Units(Content) Width(220)
+    Define_Com Class(#PRIM_TBLO.Column) Name(#LayoutMainColumn2) Displayposition(2) Parent(#LayoutMain)
+    Define_Com Class(#PRIM_TBLO.Row) Name(#LayoutMainRow1) Displayposition(1) Parent(#LayoutMain) Height(56) Units(Pixels)
+    Define_Com Class(#PRIM_TBLO.Row) Name(#LayoutMainRow2) Displayposition(2) Parent(#LayoutMain) Height(40) Units(Content)
+    Define_Com Class(#PRIM_TBLO.Row) Name(#LayoutMainRow3) Displayposition(2) Parent(#LayoutMain)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#LayoutMainItem1) Column(#LayoutMainColumn1) Manage(#AppBar) Parent(#LayoutMain) Row(#LayoutMainRow1) Columnspan(2)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#LayoutMainItem2) Column(#LayoutMainColumn1) Manage(#AppDrawer) Parent(#LayoutMain) Row(#LayoutMainRow2) Sizing(FitToHeight) Rowspan(2)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#LayoutMainItem4) Column(#LayoutMainColumn2) Manage(#SearchString) Parent(#LayoutMain) Row(#LayoutMainRow2) Sizing(FitToWidth) Alignment(TopCenter)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#LayoutMainItem3) Column(#LayoutMainColumn2) Manage(#ViewContainer) Parent(#LayoutMain) Row(#LayoutMainRow3)
+    
+    * Layout - App Bar
+    Define_Com Class(#PRIM_TBLO) Name(#LayoutAppBar)
+    Define_Com Class(#PRIM_TBLO.Row) Name(#LayoutAppBarRow1) Displayposition(1) Parent(#LayoutAppBar)
+    Define_Com Class(#PRIM_TBLO.Column) Name(#LayoutAppBarColumn1) Displayposition(1) Parent(#LayoutAppBar)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#LayoutAppBarItem1) Alignment(CenterRight) Column(#LayoutAppBarColumn1) Manage(#SearchIcon) Parent(#LayoutAppBar) Row(#LayoutAppBarRow1) Sizing(None)
+    
+    * Layout - App Drawer
+    Define_Com Class(#PRIM_TBLO) Name(#LayoutAppDrawer)
+    Define_Com Class(#PRIM_TBLO.Column) Name(#LayoutAppDrawerColumn1) Displayposition(1) Parent(#LayoutAppDrawer)
+    Define_Com Class(#PRIM_TBLO.Row) Name(#LayoutAppDrawerRow1) Displayposition(1) Parent(#LayoutAppDrawer)
+    Define_Com Class(#PRIM_TBLO.Item) Name(#LayoutAppDrawerItem1) Column(#LayoutAppDrawerColumn1) Manage(#Menu) Parent(#LayoutAppDrawer) Row(#LayoutAppDrawerRow1)
+    
+    * Controls - App Bar
+    Define_Com Class(#PRIM_MD.AppBar) Name(#AppBar) Displayposition(1) Parent(#COM_OWNER) Tabposition(1) Tabstop(False) Width(1200) Themedrawstyle('Heading1') Caption('My App 10') Captionmarginbottom(0) Captionmarginright(0) Captionmargintop(0) Icon("menu") Layoutmanager(#LayoutAppBar)
+    Define_Com Class(#PRIM_MD.Icon) Name(#SearchIcon) Displayposition(1) Icon('search') Left(1152) Parent(#AppBar) Tabposition(1) Tabstop(False) Top(4)
+    
+    * Controls - App Drawer
+    Define_Com Class(#PRIM_MD.AppDrawer) Name(#AppDrawer) Displayposition(2) Parent(#COM_OWNER) Tabposition(2) Tabstop(False) Top(56) Height(744) Layoutmanager(#LayoutAppDrawer) Themedrawstyle('MediumTitle') Width(220)
+    Define_Com Class(#PRIM_MD.Menu) Name(#Menu) Displayposition(1) Height(462) Parent(#AppDrawer) Showselection(False) Tabposition(1) Verticalscroll(True) Width(220)
+    Define_Com Class(#PRIM_MD.MenuItem) Name(#MenuItemContacts) Caption('Contacts') Captionalignment(CenterLeft) Captionmarginleft(16) Displayposition(1) Iconmarginleft(16) Left(0) Parent(#Menu) Tabposition(1) Tabstop(False) Top(0) Width(219) Height(48) Icon('view_quilt') View(#Contacts)
+    Define_Com Class(#PRIM_MD.MenuItem) Name(#MenuItemView2) Caption('View2') Captionalignment(CenterLeft) Captionmarginleft(16) Displayposition(2) Iconmarginleft(16) Left(0) Parent(#Menu) Tabposition(2) Tabstop(False) Top(0) Width(219) Height(48) Icon('view_quilt') View(#View2)
+    Define_Com Class(#PRIM_MD.MenuItem) Name(#MenuItemView3) Caption('View3') Captionalignment(CenterLeft) Captionmarginleft(16) Displayposition(3) Iconmarginleft(16) Left(0) Parent(#Menu) Tabposition(3) Tabstop(False) Top(0) Width(219) Height(48) Icon('view_quilt') View(#View3)
+    Define_Com Class(#PRIM_MD.MenuItem) Name(#MenuItemSettings) Caption('Settings') Captionalignment(CenterLeft) Captionmarginleft(16) Displayposition(4) Iconmarginleft(16) Left(0) Parent(#Menu) Tabposition(4) Tabstop(False) Top(192) Width(219) Height(48) Icon('settings') Themedrawstyle('TopDivider') View(#Settings)
+    Define_Com Class(#PRIM_MD.MenuItem) Name(#MenuItemSignOut) Caption('Sign Out') Captionalignment(CenterLeft) Captionmarginleft(16) Displayposition(5) Iconmarginleft(16) Left(0) Parent(#Menu) Tabposition(5) Tabstop(False) Top(192) Width(219) Height(48) Icon('exit_to_app')
+    
+    * Controls - Search
+    Define_Com Class(#PRIM_MD.Edit) Name(#SearchString) Appearance(None) Displayposition(4) Height(40) Helperposition(None) Captionposition(None) Left(220) Parent(#COM_OWNER) Tabposition(4) Top(56) Width(980) Icon('search') Placeholder('Search') Themedrawstyle('BottomDivider') Visible(False)
+    
+    * Views
+    Define_Com Class(#PRIM_MD.ViewContainer) Name(#ViewContainer) Displayposition(3) Left(220) Parent(#COM_OWNER) Tabposition(3) Tabstop(False) Top(56) Height(744) Width(980)
+    Define_Com Class(#M10Contacts) Name(#Contacts) Height(744) Left(326) Parent(#ViewContainer) Tabstop(False) Width(980) Displayposition(1) Tabposition(1)
+    Define_Com Class(#M10View2) Name(#View2) Height(744) Left(326) Parent(#ViewContainer) Tabstop(False) Width(980) Displayposition(2) Tabposition(2)
+    Define_Com Class(#M10View3) Name(#View3) Height(744) Left(326) Parent(#ViewContainer) Tabstop(False) Width(980) Displayposition(3) Tabposition(3)
+    Define_Com Class(#M10Settings) Name(#Settings) Displayposition(4) Parent(#ViewContainer) Caption('Settings') Height(412) Width(920) Left(612) Tabposition(4)
+    
+    * SignIn Dialog
+    Define_Com Class(#M10SignIn) Name(#SignIn)
+    
+    * ************** *
+    * Event Routines *
+    * ************** *
+    
+    Evtroutine Handling(#COM_OWNER.Initialize)
+    
+    #SignIn.ShowForSignIn
+    
+    Endroutine
+    
+    Evtroutine Handling(#MenuItemSignOut.Click)
+    
+    #ViewContainer.Clear
+    
+    #SignIn.ShowForSignOut
+    
+    Endroutine
+    
+    Evtroutine Handling(#SignIn.Completed)
+    
+    #Contacts.Show
+    
+    Endroutine
+    
+    Evtroutine Handling(#AppBar.IconClick)
+    
+    #AppDrawer.ToggleDrawer
+    
+    Endroutine
+    
+    Evtroutine Handling(#Sys_Web.DeviceChanged)
+    
+    If (#Sys_Web.Device = Mobile)
+    
+    #AppDrawer.DrawerStyle := SlideInLeft
+    
+    Else
+    
+    #AppDrawer.DrawerStyle := Permanent
+    
+    Endif
+    
+    Endroutine
+    
+    Evtroutine Handling(#SearchIcon.Click)
+    
+    If (#SearchString <> "")
+    
+    #SearchString := ""
+    
+    Set Com(#Contacts) Filter(#SearchString)
+    
+    Endif
+    
+    #SearchString.Visible := *Not #SearchString.Visible
+    
+    Endroutine
+    
+    Evtroutine Handling(#SearchString.AutoSuggest)
+    
+    Set Com(#Contacts) Filter(#SearchString)
+    
+    Endroutine
+    
+    Evtroutine Handling(#ViewContainer.ActiveViewChanged)
+    
+    #SearchString := ""
+    
+    #SearchString.Visible := False
+    
+    Endroutine
+    
+    Evtroutine Handling(#SYS_WEB.RequestFailed) Reason(#Reason) Handled(#Handled)
+    
+    If (#Reason = SessionInvalid)
+    
+    #ViewContainer.Clear
+    
+    #SYS_APPLN.CloseAllDialogs
+    
+    #SignIn.ShowForSessionExpired
+    
+    #Handled := True
+    
+    Endif
+    
+    Endroutine
+    
+    End_Com
+
+  Components:
+  - M10Contacts
+  - M10ContactsDetails
+  - M10ContactsServer
+  - M10ContactsDelete
+  - M10View2
+  - M10View3
+  - M10Settings
+  - M10Session
+  - M10SignIn
+
+  Offline Support:    No
+  Allow Zoom:         No
+
+  Loading Screen:
+    Image:              Spinner
