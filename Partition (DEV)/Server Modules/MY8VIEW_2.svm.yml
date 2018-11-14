@@ -1,0 +1,76 @@
+﻿ServerModule:
+  Name:               MY8ViewEmployeesServer
+  Target Platform:    Windows/IBM i/Linux
+
+  Multilingual Details:
+  - ENG:
+      Description:        "ViewEmployees Server"
+
+  - FRA:
+      Description:        "ViewEmployees Server"
+
+  Source: |
+    Begin_Com Role(*EXTENDS #PRIM_SRVM) Sessionidentifier('MY8SESSION')
+    
+    Def_List Name(#List) Fields(#xEmployeeIdentification #xEmployeeSurname #xEmployeeGivenNames) Type(*WORKING) Entrys(*MAX)
+    
+    Group_By Name(#Fields) Fields(#xEmployeeIdentification #xEmployeeTitle #xEmployeeSurname #xEmployeeGivenNames #xEmployeeDateofBirth #xEmployeeGender #xEmployeeStreet #xEmployeeCity #xEmployeeState #xEmployeePostalCode #xEmployeeCountry #xEmployeeHomeTelephone #xEmployeeBusinessTelephone #xEmployeeMobilePhone #xEmployeeSalary #xEmployeeStartDate #xEmployeeTerminationDate #xDepartmentCode #xEmployeeMonthlySalary #xEmployeeAge #xEmployeeDepartment)
+    
+    Srvroutine Name(Find) Session(*REQUIRED)
+    Field_Map For(*INPUT) Field(#STD_STRNG) Parameter_Name(Filter)
+    List_Map For(*OUTPUT) List(#List)
+    
+    #STD_STRNG := #STD_STRNG.UpperCase.Trim
+    
+    Select Fields(#List) From_File(xemployee) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    If ((#STD_STRNG = *BLANKS) *OrIf (#xEmployeeIdentification.UpperCase.Contains( #STD_STRNG )) *OrIf (#xEmployeeSurname.UpperCase.Contains( #STD_STRNG )) *OrIf (#xEmployeeGivenNames.UpperCase.Contains( #STD_STRNG )))
+    
+    Add_Entry To_List(#List)
+    
+    Endif
+    
+    Endselect
+    
+    Endroutine
+    
+    Srvroutine Name(Read) Session(*REQUIRED)
+    Field_Map For(*INPUT) Field(#xEmployeeIdentification)
+    Group_Map For(*OUTPUT) Group(#Fields)
+    
+    Fetch Fields(#Fields) From_File(xemployee) With_Key(#xEmployeeIdentification) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    Endroutine
+    
+    Srvroutine Name(Save) Session(*REQUIRED)
+    Group_Map For(*INPUT) Group(#Fields)
+    Field_Map For(*OUTPUT) Field(#STD_CODE) Parameter_Name(ReturnCode)
+    
+    Update Fields(#Fields) In_File(xemployee) With_Key(#xEmployeeIdentification) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    If_Status Is(*NORECORD)
+    
+    Insert Fields(#Fields) To_File(xemployee) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    Endif
+    
+    If_Status Is(*OKAY)
+    
+    #STD_CODE := "OK"
+    
+    Else
+    
+    #STD_CODE := "ER"
+    
+    Endif
+    
+    Endroutine
+    
+    Srvroutine Name(Delete) Session(*REQUIRED)
+    Field_Map For(*INPUT) Field(#xEmployeeIdentification)
+    
+    Delete From_File(xemployee) With_Key(#xEmployeeIdentification) Io_Error(*NEXT) Val_Error(*NEXT)
+    
+    Endroutine
+    
+    End_Com
